@@ -1,0 +1,56 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# Visual Studio Code workspace
+.vscode/
+
+# Windows image thumbnail cache
+Thumbs.db
+
+# Auto-generated files
+*.tlog
+*.idb
+*.pdb
+*.ipch
+
+# Backup & temp files
+*.bak
+*.tmp
+*.log
+*.cache
+*.db
+
+# CMake (if used)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CMakeSettings.json
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Others
+*.aps
+*.ncb
+*.ilk
+
+# Crash dumps
+*.dmp
+
+# Others
+_ReSharper*/
+*.DotSettings.user
