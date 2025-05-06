@@ -14,6 +14,8 @@
 
 # Visual Studio Code workspace
 .vscode/
+.vs/
+x64/
 
 # Windows image thumbnail cache
 Thumbs.db
