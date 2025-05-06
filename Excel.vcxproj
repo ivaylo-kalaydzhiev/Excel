@@ -127,7 +127,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CellAddress.cpp" />
+    <ClCompile Include="CellValue.cpp" />
+    <ClCompile Include="ConfigurationParser.cpp" />
     <ClCompile Include="Excel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Alignment.h" />
+    <ClInclude Include="CellAddress.h" />
+    <ClInclude Include="CellValue.h" />
+    <ClInclude Include="ConfigurationParser.h" />
+    <ClInclude Include="Table.h" />
+    <ClInclude Include="TableConfiguration.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
