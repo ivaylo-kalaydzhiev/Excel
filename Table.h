@@ -8,5 +8,5 @@ struct Table {
     int rows;
     int cols;
 
-    std::unordered_map<CellAddress, CellValue> cells;
+    Cells cells;
 };

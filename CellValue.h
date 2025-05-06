@@ -25,7 +25,7 @@ public:
     /// - A formula cell may show the evaluated result.
     /// - A reference may show the referenced cell's value.
     ///
-    /// @param table The context in which the cell is being evaluated.
+    /// @param cells The context in which the cell is being evaluated.
     /// @return A string representing the display value of the cell.
     virtual std::string displayValue(const std::unordered_map<CellAddress, CellValue>& cells) const = 0;
 
@@ -37,7 +37,7 @@ public:
     /// - Text, range, or invalid types return 0.
     /// - Formula cells return the evaluated result.
     ///
-    /// @param table The context in which the cell is being evaluated.
+    /// @param cells The context in which the cell is being evaluated.
     /// @return A double representing the numeric value of the cell.
     virtual double numericalValue(const std::unordered_map<CellAddress, CellValue>& cells) const = 0;
 
@@ -45,3 +45,5 @@ protected:
     /// The raw user-provided string representing this cell's input.
     std::string _literalValue;
 };
+
+using Cells = std::unordered_map<CellAddress, CellValue>;
