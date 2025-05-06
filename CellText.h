@@ -5,6 +5,6 @@
 class CellText : public CellValue {
 public:
 
-	std::string displayValue(const Table&) const override;
-	double numericalValue(const Table&) const override;
+	std::string displayValue(const std::unordered_map<CellAddress, CellValue>& cells) const override;
+	double numericalValue(const std::unordered_map<CellAddress, CellValue>& cells) const override;
 };

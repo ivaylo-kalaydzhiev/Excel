@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include "Table.h"
+#include <unordered_map>
+#include "CellAddress.h"
 
 /// Abstract base class representing a value stored in a spreadsheet cell.
 /// 
@@ -26,7 +27,7 @@ public:
     ///
     /// @param table The context in which the cell is being evaluated.
     /// @return A string representing the display value of the cell.
-    virtual std::string displayValue(const Table& table) const = 0;
+    virtual std::string displayValue(const std::unordered_map<CellAddress, CellValue>& cells) const = 0;
 
     /// Returns the numerical value of the cell after evaluation.
     ///
@@ -38,7 +39,7 @@ public:
     ///
     /// @param table The context in which the cell is being evaluated.
     /// @return A double representing the numeric value of the cell.
-    virtual double numericalValue(const Table& table) const = 0;
+    virtual double numericalValue(const std::unordered_map<CellAddress, CellValue>& cells) const = 0;
 
 protected:
     /// The raw user-provided string representing this cell's input.

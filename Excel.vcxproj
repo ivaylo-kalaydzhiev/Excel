@@ -128,6 +128,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CellAddress.cpp" />
+    <ClCompile Include="CellBool.cpp" />
+    <ClCompile Include="CellNumber.cpp" />
+    <ClCompile Include="CellText.cpp" />
     <ClCompile Include="CellValue.cpp" />
     <ClCompile Include="ConfigurationParser.cpp" />
     <ClCompile Include="Excel.cpp" />
@@ -135,6 +138,9 @@
   <ItemGroup>
     <ClInclude Include="Alignment.h" />
     <ClInclude Include="CellAddress.h" />
+    <ClInclude Include="CellBool.h" />
+    <ClInclude Include="CellNumber.h" />
+    <ClInclude Include="CellText.h" />
     <ClInclude Include="CellValue.h" />
     <ClInclude Include="ConfigurationParser.h" />
     <ClInclude Include="Table.h" />

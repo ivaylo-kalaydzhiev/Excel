@@ -27,6 +27,15 @@
     <ClCompile Include="CellValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CellNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CellBool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CellText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConfigurationParser.h">
@@ -45,6 +54,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CellValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CellNumber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CellBool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CellText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
