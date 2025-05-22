@@ -2,7 +2,16 @@
 
 #include <string>
 #include <unordered_map>
+#include <memory>
 #include "CellAddress.h"
+
+template <typename T>
+using sp = std::shared_ptr<T>;
+
+template <typename T, typename... Args>
+sp<T> ms(Args&&... args) {
+    return std::make_shared<T>(std::forward<Args>(args)...);
+}
 
 /// Abstract base class representing a value stored in a spreadsheet cell.
 /// 
@@ -27,7 +36,7 @@ public:
     ///
     /// @param cells The context in which the cell is being evaluated.
     /// @return A string representing the display value of the cell.
-    virtual std::string displayValue(const std::unordered_map<CellAddress, CellValue>& cells) const = 0;
+    virtual std::string displayValue(const std::unordered_map<CellAddress, sp<CellValue>>& cells) const = 0;
 
     /// Returns the numerical value of the cell after evaluation.
     ///
@@ -39,11 +48,11 @@ public:
     ///
     /// @param cells The context in which the cell is being evaluated.
     /// @return A double representing the numeric value of the cell.
-    virtual double numericalValue(const std::unordered_map<CellAddress, CellValue>& cells) const = 0;
+    virtual double numericalValue(const std::unordered_map<CellAddress, sp<CellValue>>& cells) const = 0;
 
 protected:
     /// The raw user-provided string representing this cell's input.
     std::string _literalValue;
 };
 
-using Cells = std::unordered_map<CellAddress, CellValue>;
+using Cells = std::unordered_map<CellAddress, sp<CellValue>>;

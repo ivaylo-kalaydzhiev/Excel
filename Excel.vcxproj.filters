@@ -36,6 +36,9 @@
     <ClCompile Include="CellText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CellReference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConfigurationParser.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CellText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CellReference.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
