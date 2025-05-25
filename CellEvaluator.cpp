@@ -87,7 +87,7 @@ std::string CellEvaluator::evaluate(const CellValue& cellValue) {
 
 // Resolves a CellValue into a LiteralValue
 LiteralValue CellEvaluator::resolve(const CellValue& value) {
-    if (value.isRaw()) {
+    if (value.isLiteral()) {
         // If it's a raw string, double, or bool
         return std::visit([](auto&& arg) -> LiteralValue {
             using T = std::decay_t<decltype(arg)>;

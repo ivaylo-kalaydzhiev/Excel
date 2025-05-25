@@ -1,9 +1,7 @@
 #include "CellValue.h"
 
-bool CellValue::isRaw() const {
-    return std::holds_alternative<std::string>(value) ||
-        std::holds_alternative<double>(value) ||
-        std::holds_alternative<bool>(value);
+bool CellValue::isLiteral() const {
+    return std::holds_alternative<LiteralValue>(value);
 }
 
 bool CellValue::isReference() const {

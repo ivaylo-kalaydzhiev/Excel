@@ -122,5 +122,8 @@
     <ClInclude Include="CellEvaluator.h">
       <Filter>Header Files\Evaluator</Filter>
     </ClInclude>
+    <ClInclude Include="Formula.h">
+      <Filter>Header Files\Event</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

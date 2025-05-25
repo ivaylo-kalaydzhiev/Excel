@@ -9,7 +9,7 @@ TableViewModel::TableViewModel(TableConfiguration config, TableModel tableModel)
 void TableViewModel::handle(const Event& event) {
     if (auto e = std::get_if<InsertEvent>(&event)) {
         // Fix this
-        //tableModel.setCellValue(e.target, CellValue{ e.value });
+        tableModel.setCellValue(e->target, CellValue{ e->value } );
         updateDisplayableCell(e->target);
     }
     else if (auto e = std::get_if<DeleteEvent>(&event)) {

@@ -146,6 +146,7 @@
     <ClInclude Include="CellAddress.h" />
     <ClInclude Include="CellEvaluator.h" />
     <ClInclude Include="CellValue.h" />
+    <ClInclude Include="Formula.h" />
     <ClInclude Include="TableConfiguration.h" />
     <ClInclude Include="ConfigurationParser.h" />
     <ClInclude Include="DisplayableTableModel.h" />

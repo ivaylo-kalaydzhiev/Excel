@@ -7,9 +7,9 @@
 #include "Event.h"
 
 struct CellValue {
-    std::variant<std::string, double, bool, CellAddress, FormulaValue> value;
+    std::variant<LiteralValue, CellAddress, FormulaValue> value;
 
-    bool isRaw() const;
+    bool isLiteral() const;
     bool isReference() const;
     bool isFormula() const;
 };
