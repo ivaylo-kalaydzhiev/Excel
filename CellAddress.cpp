@@ -29,3 +29,7 @@ std::string CellAddress::toString() const {
     }
     return colStr + std::to_string(row + 1);
 }
+
+bool CellAddress::operator==(const CellAddress& other) const {
+    return this->row == other.row && this->column == other.column;
+}

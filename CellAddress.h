@@ -9,6 +9,8 @@ struct CellAddress {
 
     static CellAddress fromString(const std::string& str);
     std::string toString() const;
+
+    bool operator==(const CellAddress& other) const;
 };
 
 namespace std {
