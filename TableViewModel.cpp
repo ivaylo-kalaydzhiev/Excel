@@ -8,7 +8,6 @@ TableViewModel::TableViewModel(TableConfiguration config, TableModel tableModel)
 // We need to make sure we update both the TableModel and the DisplayableTableModel on each event handled
 void TableViewModel::handle(const Event& event) {
     if (auto e = std::get_if<InsertEvent>(&event)) {
-        // Fix this
         tableModel.setCellValue(e->target, CellValue{ e->value } );
         updateDisplayableCell(e->target);
     }

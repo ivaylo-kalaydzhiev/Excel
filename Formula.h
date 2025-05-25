@@ -8,7 +8,7 @@
 // - Formula Parameter
 
 struct LiteralValue {
-    std::variant<int, bool, std::string> value;
+    std::variant<double, bool, std::string> value;
 };
 
 struct ReferenceValue {

@@ -261,7 +261,7 @@ LiteralValue CellEvaluator::evalSUM(const std::vector<FormulaParam>& args) {
     if (!hasNumeric) { // If no numeric cells found
         return LiteralValue{ "#VALUE!" };
     }
-    return LiteralValue{ static_cast<int>(sum) }; // Convert to int if whole number
+    return LiteralValue{ static_cast<double>(sum) }; // Convert to int if whole number
 }
 
 LiteralValue CellEvaluator::evalAVERAGE(const std::vector<FormulaParam>& args) {
@@ -316,7 +316,7 @@ LiteralValue CellEvaluator::evalMIN(const std::vector<FormulaParam>& args) {
     if (!foundNumeric) { // No numeric values found
         return LiteralValue{ "#VALUE!" };
     }
-    return LiteralValue{ static_cast<int>(minVal) }; // Convert to int if whole number
+    return LiteralValue{ static_cast<double>(minVal) }; // Convert to int if whole number
 }
 
 LiteralValue CellEvaluator::evalMAX(const std::vector<FormulaParam>& args) {
@@ -344,7 +344,7 @@ LiteralValue CellEvaluator::evalMAX(const std::vector<FormulaParam>& args) {
     if (!foundNumeric) { // No numeric values found
         return LiteralValue{ "#VALUE!" };
     }
-    return LiteralValue{ static_cast<int>(maxVal) }; // Convert to int if whole number
+    return LiteralValue{ static_cast<double>(maxVal) }; // Convert to int if whole number
 }
 
 LiteralValue CellEvaluator::evalCONCAT(const std::vector<FormulaParam>& args) {
@@ -432,7 +432,7 @@ LiteralValue CellEvaluator::evalLEN(const std::vector<FormulaParam>& args) {
     }
 
     std::string text = getStringValue(values[0]);
-    return LiteralValue{ static_cast<int>(text.length()) };
+    return LiteralValue{ static_cast<double>(text.length()) };
 }
 
 LiteralValue CellEvaluator::evalCOUNT(const std::vector<FormulaParam>& args) {
@@ -457,5 +457,5 @@ LiteralValue CellEvaluator::evalCOUNT(const std::vector<FormulaParam>& args) {
             count++;
         }
     }
-    return LiteralValue{ count };
+    return LiteralValue{ static_cast<double>(count) };
 }

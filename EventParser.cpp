@@ -4,33 +4,57 @@
 #include <regex>
 #include <stdexcept>
 
+static std::string trim(const std::string& s) {
+    auto start = s.find_first_not_of(" \t");
+    auto end = s.find_last_not_of(" \t");
+    return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
+}
+
+static const std::regex deleteRegex(R"(([A-Z]+[0-9]+) delete)");
+static const std::regex referenceRegex(R"(([A-Z]+[0-9]+)=([A-Z]+[0-9]+))");
+static const std::regex insertRegex(R"(([A-Z]+[0-9]+) insert (.+))");
+static const std::regex formulaRegex(R"(([A-Z]+[0-9]+)=(\w+)\((.*)\))");
+static const std::regex numberRegex(R"(^-?\d+(\.\d+)?$)");
+static const std::regex addressRegex(R"(^[A-Z]+[0-9]+$)");
+static const std::regex rangeRegex(R"(^[A-Z]+[0-9]+:[A-Z]+[0-9]+$)");
+
+
 Event EventParser::parse(const std::string& input) {
     std::smatch match;
 
     // delete
-    if (std::regex_match(input, match, std::regex(R"(([A-Z][0-9]+) delete)"))) {
+    if (std::regex_match(input, match, deleteRegex)) {
         return DeleteEvent{ CellAddress::fromString(match[1]) };
     }
 
     // reference
-    if (std::regex_match(input, match, std::regex(R"(([A-Z][0-9]+)=([A-Z][0-9]+))"))) {
-        return ReferenceEvent{ CellAddress::fromString(match[1]), CellAddress::fromString(match[2]) };
+    if (std::regex_match(input, match, referenceRegex)) {
+        return ReferenceEvent{
+            CellAddress::fromString(match[1]),
+            CellAddress::fromString(match[2])
+        };
     }
 
     // insert
-    if (std::regex_match(input, match, std::regex(R"(([A-Z][0-9]+) insert (.+))"))) {
+    if (std::regex_match(input, match, insertRegex)) {
         std::string raw = match[2];
-        
         LiteralValue literal;
-        if (raw == "TRUE" || raw == "FALSE") literal.value = (raw == "TRUE");
-        else if (std::regex_match(raw, std::regex(R"(\d+)"))) literal.value = std::stoi(raw);
-        else literal.value = raw;
-        
+
+        if (raw == "TRUE" || raw == "FALSE") {
+            literal.value = (raw == "TRUE");
+        }
+        else if (std::regex_match(raw, numberRegex)) {
+            literal.value = std::stod(raw);
+        }
+        else {
+            literal.value = raw;
+        }
+
         return InsertEvent{ CellAddress::fromString(match[1]), literal };
     }
 
     // formula
-    if (std::regex_match(input, match, std::regex(R"(([A-Z][0-9]+)=(\w+)\((.*)\))"))) {
+    if (std::regex_match(input, match, formulaRegex)) {
         CellAddress address = CellAddress::fromString(match[1]);
         std::string funcName = match[2];
         std::string params = match[3];
@@ -44,37 +68,37 @@ Event EventParser::parse(const std::string& input) {
         else if (funcName == "SUBSTR") type = FormulaType::SUBSTR;
         else if (funcName == "LEN") type = FormulaType::LEN;
         else if (funcName == "COUNT") type = FormulaType::COUNT;
-        else throw std::invalid_argument("Unknown formula type");
+        else throw std::invalid_argument("Unknown formula type: " + funcName);
 
         std::vector<FormulaParam> parsedParams;
         std::istringstream ss(params);
         std::string token;
-        while (std::getline(ss, token, ',')) {
-            token.erase(0, token.find_first_not_of(" \t"));
-            token.erase(token.find_last_not_of(" \t") + 1);
 
-            // literal number
-            if (std::regex_match(token, std::regex(R"(\d+)")))
-                parsedParams.push_back(LiteralValue{ std::stoi(token) });
-            // literal bool
-            else if (token == "TRUE" || token == "FALSE")
+        while (std::getline(ss, token, ',')) {
+            token = trim(token);
+
+            if (std::regex_match(token, numberRegex)) {
+                parsedParams.push_back(LiteralValue{ std::stod(token) });
+            }
+            else if (token == "TRUE" || token == "FALSE") {
                 parsedParams.push_back(LiteralValue{ token == "TRUE" });
-            // range
-            else if (std::regex_match(token, std::regex(R"([A-Z][0-9]+:[A-Z][0-9]+)"))) {
+            }
+            else if (std::regex_match(token, rangeRegex)) {
                 auto delim = token.find(":");
                 parsedParams.push_back(AddressRange{
                     CellAddress::fromString(token.substr(0, delim)),
-                    CellAddress::fromString(token.substr(delim + 1)) });
+                    CellAddress::fromString(token.substr(delim + 1))
+                    });
             }
-            // reference address
-            else if (std::regex_match(token, std::regex(R"([A-Z][0-9]+)"))) {
+            else if (std::regex_match(token, addressRegex)) {
                 parsedParams.push_back(CellAddress::fromString(token));
             }
-            // literal string
             else {
                 parsedParams.push_back(LiteralValue{ token });
             }
         }
+
+        return FormulaEvent{ address, type, parsedParams };
     }
 
     throw std::invalid_argument("Could not parse input: " + input);
