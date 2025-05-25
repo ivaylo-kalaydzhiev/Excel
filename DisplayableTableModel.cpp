@@ -10,10 +10,7 @@ void DisplayableTableModel::removeDisplayValue(const CellAddress& address) {
 
 const std::string* DisplayableTableModel::getDisplayValue(const CellAddress& address) const {
     auto it = displayValues.find(address);
-    if (it != displayValues.end()) {
-        return &it->second;
-    }
-    return nullptr;
+    return (it != displayValues.end()) ? &it->second : nullptr;
 }
 
 const DisplayableTableModel::DisplayMap& DisplayableTableModel::getAllDisplayValues() const {

@@ -5,27 +5,25 @@ TableViewModel::TableViewModel(TableConfiguration config, TableModel tableModel)
     updateAllDisplayableCells();
 }
 
+// We need to make sure we update both the TableModel and the DisplayableTableModel on each event handled
 void TableViewModel::handle(const Event& event) {
-    std::visit([this](const auto& e) {
-        using T = std::decay_t<decltype(e)>;
-
-        if constexpr (std::is_same_v<T, InsertEvent>) {
-            //tableModel.setCellValue(e.target, CellValue{ e.value });
-            updateDisplayableCell(e.target);
-        }
-        else if constexpr (std::is_same_v<T, DeleteEvent>) {
-            tableModel.removeCellValue(e.target);
-            displayableTableModel.removeDisplayValue(e.target);
-        }
-        else if constexpr (std::is_same_v<T, ReferenceEvent>) {
-            tableModel.setCellValue(e.target, CellValue{ e.source });
-            updateDisplayableCell(e.target);
-        }
-        else if constexpr (std::is_same_v<T, FormulaEvent>) {
-            tableModel.setCellValue(e.target, CellValue{ FormulaValue{e.formula, e.params} });
-            updateDisplayableCell(e.target);
-        }
-        }, event);
+    if (auto e = std::get_if<InsertEvent>(&event)) {
+        // Fix this
+        //tableModel.setCellValue(e.target, CellValue{ e.value });
+        updateDisplayableCell(e->target);
+    }
+    else if (auto e = std::get_if<DeleteEvent>(&event)) {
+        tableModel.removeCellValue(e->target);
+        displayableTableModel.removeDisplayValue(e->target);
+    }
+    else if (auto e = std::get_if<ReferenceEvent>(&event)) {
+        tableModel.setCellValue(e->target, CellValue{ e->source });
+        updateDisplayableCell(e->target);
+    }
+    else if (auto e = std::get_if<FormulaEvent>(&event)) {
+        tableModel.setCellValue(e->target, CellValue{ FormulaValue{e->formula, e->params} });
+        updateDisplayableCell(e->target);
+    }
 }
 
 const TableConfiguration& TableViewModel::getConfiguration() const {

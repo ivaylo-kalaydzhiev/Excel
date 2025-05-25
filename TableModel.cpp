@@ -10,10 +10,7 @@ void TableModel::removeCellValue(const CellAddress& address) {
 
 const CellValue* TableModel::getCellValue(const CellAddress& address) const {
     auto it = cells.find(address);
-    if (it != cells.end()) {
-        return &it->second;
-    }
-    return nullptr;
+    return (it != cells.end()) ? &it->second : nullptr;
 }
 
 const TableModel::CellMap& TableModel::getAllCells() const {
