@@ -131,7 +131,7 @@
     <ClCompile Include="CellAddress.cpp" />
     <ClCompile Include="CellEvaluator.cpp" />
     <ClCompile Include="CellValue.cpp" />
-    <ClCompile Include="Configuration.cpp" />
+    <ClCompile Include="TableConfiguration.cpp" />
     <ClCompile Include="ConfigurationParser.cpp" />
     <ClCompile Include="DisplayableTableModel.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -146,7 +146,7 @@
     <ClInclude Include="CellAddress.h" />
     <ClInclude Include="CellEvaluator.h" />
     <ClInclude Include="CellValue.h" />
-    <ClInclude Include="Configuration.h" />
+    <ClInclude Include="TableConfiguration.h" />
     <ClInclude Include="ConfigurationParser.h" />
     <ClInclude Include="DisplayableTableModel.h" />
     <ClInclude Include="Event.h" />

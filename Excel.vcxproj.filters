@@ -63,7 +63,7 @@
     <ClCompile Include="CellEvaluator.cpp">
       <Filter>Source Files\Evaluator</Filter>
     </ClCompile>
-    <ClCompile Include="Configuration.cpp">
+    <ClCompile Include="TableConfiguration.cpp">
       <Filter>Source Files\Config</Filter>
     </ClCompile>
     <ClCompile Include="ConfigurationParser.cpp">
@@ -86,7 +86,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Configuration.h">
+    <ClInclude Include="TableConfiguration.h">
       <Filter>Header Files\Config</Filter>
     </ClInclude>
     <ClInclude Include="ConfigurationParser.h">
