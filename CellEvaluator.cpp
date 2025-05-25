@@ -3,24 +3,29 @@
 #include <cmath>
 #include <stdexcept>
 #include <limits>
+#include <variant>
 
-// Helper to convert LiteralValue to string for output
-std::string literalValueToString(const LiteralValue& lv) {
-    return std::visit([](auto&& arg) -> std::string {
-        using T = std::decay_t<decltype(arg)>;
-        if constexpr (std::is_same_v<T, int>) {
-            return std::to_string(arg);
-        }
-        else if constexpr (std::is_same_v<T, bool>) {
-            return arg ? "TRUE" : "FALSE";
-        }
-        else if constexpr (std::is_same_v<T, std::string>) {
-            return arg;
-        }
-        return "#VALUE!"; // Should not happen with current LiteralValue types
-        }, lv.value);
+CellEvaluator::CellEvaluator(const TableModel& model) : model(model) {}
+
+// - HELPERS
+
+std::string getStringValue(const LiteralValue& lv) {
+    if (auto val = std::get_if<double>(&lv.value)) {
+        return std::to_string(*val);
+    }
+    else if (auto val = std::get_if<bool>(&lv.value)) {
+        return (*val) ? "TRUE" : "FALSE";
+    }
+    else if (auto val = std::get_if<std::string>(&lv.value)) {
+        return *val;
+    }
+    else {
+        // Should not happen with current LiteralValue types
+        return "#VALUE!";
+    }
 }
 
+// Rethink
 // Helper to extract a double from LiteralValue, returns NaN if not numeric
 double getNumericValue(const LiteralValue& lv) {
     return std::visit([](auto&& arg) -> double {
@@ -49,30 +54,12 @@ double getNumericValue(const LiteralValue& lv) {
         }, lv.value);
 }
 
-// Helper to extract a string from LiteralValue
-std::string getStringValue(const LiteralValue& lv) {
-    auto lambda = [&](auto&& arg) -> std::string {
-        using T = std::decay_t<decltype(arg)>;
-        if constexpr (std::is_same_v<T, std::string>) {
-            return arg;
-        }
-        else {
-            return literalValueToString(lv);
-        }
-        };
-    return std::visit(lambda, lv.value);
-}
+// - Public evaluation interface
 
-
-CellEvaluator::CellEvaluator(const TableModel& model) : model(model) {
-    // Constructor initializes the model reference
-}
-
-// Public evaluation interface
 std::string CellEvaluator::evaluate(const CellValue& cellValue) {
     try {
         LiteralValue result = resolve(cellValue);
-        return literalValueToString(result);
+        return getStringValue(result);
     }
     catch (const std::runtime_error& e) {
         return e.what(); // Return error message
@@ -85,49 +72,32 @@ std::string CellEvaluator::evaluate(const CellValue& cellValue) {
     }
 }
 
-// Resolves a CellValue into a LiteralValue
+// - Private evaluation
+
 LiteralValue CellEvaluator::resolve(const CellValue& value) {
     if (value.isLiteral()) {
-        // If it's a raw string, double, or bool
-        return std::visit([](auto&& arg) -> LiteralValue {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, std::string>) {
-                return LiteralValue{ arg };
-            }
-            else if constexpr (std::is_same_v<T, double>) {
-                // Convert double to int if it's a whole number, otherwise keep as string for precision
-                if (arg == static_cast<int>(arg)) {
-                    return LiteralValue{ static_cast<int>(arg) };
-                }
-                else {
-                    return LiteralValue{ std::to_string(arg) }; // Store as string to preserve precision
-                }
-            }
-            else if constexpr (std::is_same_v<T, bool>) {
-                return LiteralValue{ arg };
-            }
-            return LiteralValue{ "#VALUE!" }; // Should not happen
-            }, value.value);
+        const LiteralValue& lv = std::get<LiteralValue>(value.value);
+        return lv;
     }
     else if (value.isReference()) {
-        // If it's a cell reference, resolve the target cell's value
         const CellAddress& targetAddress = std::get<CellAddress>(value.value);
         const CellValue* targetCellValue = model.getCellValue(targetAddress);
         if (!targetCellValue) {
-            return LiteralValue{ "#REF!" }; // Reference to an empty or non-existent cell
+            // Reference to an empty or non-existent cell
+            return LiteralValue{ "#REF!" };
         }
         // Recursive call to resolve the referenced cell's value
         return resolve(*targetCellValue);
     }
     else if (value.isFormula()) {
-        // If it's a formula, evaluate it
         const FormulaValue& formula = std::get<FormulaValue>(value.value);
         return evaluateFormula(formula);
     }
     return LiteralValue{ "#VALUE!" }; // Unknown CellValue type
 }
 
-// Evaluates a FormulaValue
+// - Formula Evaluation Helpers
+
 LiteralValue CellEvaluator::evaluateFormula(const FormulaValue& formula) {
     try {
         switch (formula.type) {
@@ -148,7 +118,7 @@ LiteralValue CellEvaluator::evaluateFormula(const FormulaValue& formula) {
         case FormulaType::COUNT:
             return evalCOUNT(formula.parameters);
         default:
-            return LiteralValue{ "#NAME?" }; // Unknown formula type
+            return LiteralValue{ "#NAME?" };
         }
     }
     catch (const std::runtime_error& e) {

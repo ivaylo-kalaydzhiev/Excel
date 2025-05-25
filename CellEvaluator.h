@@ -16,9 +16,8 @@ public:
 
 private:
     const TableModel& model;
-
-    // Internal helpers
-    LiteralValue resolve(const CellValue& value); // returns actual result, not string
+    
+    LiteralValue resolve(const CellValue& value);
     LiteralValue evaluateFormula(const FormulaValue& formula);
     bool containsErrorLiteral(const std::vector<LiteralValue>& values);
 
