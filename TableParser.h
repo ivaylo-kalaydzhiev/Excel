@@ -1,5 +1,5 @@
 #pragma once
-class CellAddress
+class TableParser
 {
 };
 

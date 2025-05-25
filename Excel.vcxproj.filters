@@ -13,63 +13,114 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Config">
+      <UniqueIdentifier>{daa1ad6e-98d7-43db-bade-4323334acbe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Table">
+      <UniqueIdentifier>{28979a4c-0cb2-4780-9cc7-0d60a36ebb9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Event">
+      <UniqueIdentifier>{f8ef8fe0-7d9b-4a97-babe-9b46346df637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\View">
+      <UniqueIdentifier>{7c421dbd-2ad0-4827-80e3-49d56ca260ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Evaluator">
+      <UniqueIdentifier>{e8dec6df-3986-4bf7-b655-02b536a0fb3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Config">
+      <UniqueIdentifier>{c3599d16-57bf-47b4-8201-855a8534e25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Event">
+      <UniqueIdentifier>{a9a4ad8b-5b83-49ae-a167-18068f6758dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Evaluator">
+      <UniqueIdentifier>{5d1cfbb8-12cf-4475-bca4-57f75da018b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Table">
+      <UniqueIdentifier>{1f587681-7689-4ed6-9b91-0a3b69415a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\View">
+      <UniqueIdentifier>{6376ce18-46ae-4fa2-ae87-18a10f4d990e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Excel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Source Files\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="EventParser.cpp">
+      <Filter>Source Files\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="TableView.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="TableViewModel.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="CellEvaluator.cpp">
+      <Filter>Source Files\Evaluator</Filter>
+    </ClCompile>
+    <ClCompile Include="Configuration.cpp">
+      <Filter>Source Files\Config</Filter>
+    </ClCompile>
     <ClCompile Include="ConfigurationParser.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Config</Filter>
     </ClCompile>
     <ClCompile Include="CellAddress.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Table</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayableTableModel.cpp">
+      <Filter>Source Files\Table</Filter>
     </ClCompile>
     <ClCompile Include="CellValue.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Table</Filter>
     </ClCompile>
-    <ClCompile Include="CellNumber.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="TableModel.cpp">
+      <Filter>Source Files\Table</Filter>
     </ClCompile>
-    <ClCompile Include="CellBool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CellText.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CellReference.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="TableParser.cpp">
+      <Filter>Source Files\Table</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Configuration.h">
+      <Filter>Header Files\Config</Filter>
+    </ClInclude>
     <ClInclude Include="ConfigurationParser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TableConfiguration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Alignment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CellAddress.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Config</Filter>
     </ClInclude>
     <ClInclude Include="CellValue.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Table</Filter>
     </ClInclude>
-    <ClInclude Include="CellNumber.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="CellAddress.h">
+      <Filter>Header Files\Table</Filter>
     </ClInclude>
-    <ClInclude Include="CellBool.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="TableModel.h">
+      <Filter>Header Files\Table</Filter>
     </ClInclude>
-    <ClInclude Include="CellText.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="TableParser.h">
+      <Filter>Header Files\Table</Filter>
     </ClInclude>
-    <ClInclude Include="CellReference.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="DisplayableTableModel.h">
+      <Filter>Header Files\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventParser.h">
+      <Filter>Header Files\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="TableView.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="TableViewModel.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="CellEvaluator.h">
+      <Filter>Header Files\Evaluator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

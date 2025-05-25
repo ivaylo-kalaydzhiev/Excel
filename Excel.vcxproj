@@ -128,25 +128,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CellAddress.cpp" />
-    <ClCompile Include="CellBool.cpp" />
-    <ClCompile Include="CellNumber.cpp" />
-    <ClCompile Include="CellReference.cpp" />
-    <ClCompile Include="CellText.cpp" />
+    <ClCompile Include="CellEvaluator.cpp" />
     <ClCompile Include="CellValue.cpp" />
+    <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="ConfigurationParser.cpp" />
+    <ClCompile Include="DisplayableTableModel.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventParser.cpp" />
     <ClCompile Include="Excel.cpp" />
+    <ClCompile Include="TableModel.cpp" />
+    <ClCompile Include="TableParser.cpp" />
+    <ClCompile Include="TableView.cpp" />
+    <ClCompile Include="TableViewModel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Alignment.h" />
     <ClInclude Include="CellAddress.h" />
-    <ClInclude Include="CellBool.h" />
-    <ClInclude Include="CellNumber.h" />
-    <ClInclude Include="CellReference.h" />
-    <ClInclude Include="CellText.h" />
+    <ClInclude Include="CellEvaluator.h" />
     <ClInclude Include="CellValue.h" />
+    <ClInclude Include="Configuration.h" />
     <ClInclude Include="ConfigurationParser.h" />
-    <ClInclude Include="Table.h" />
-    <ClInclude Include="TableConfiguration.h" />
+    <ClInclude Include="DisplayableTableModel.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventParser.h" />
+    <ClInclude Include="TableModel.h" />
+    <ClInclude Include="TableParser.h" />
+    <ClInclude Include="TableView.h" />
+    <ClInclude Include="TableViewModel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
