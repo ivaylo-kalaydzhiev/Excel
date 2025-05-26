@@ -10,6 +10,8 @@ static std::string trim(const std::string& s) {
     return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
 }
 
+static const std::regex openTableRegex(R"(open (\w+) (.+))");
+static const std::regex newTableRegex(R"(new (.+))");
 static const std::regex deleteRegex(R"(([A-Z]+[0-9]+) delete)");
 static const std::regex referenceRegex(R"(([A-Z]+[0-9]+)=([A-Z]+[0-9]+))");
 static const std::regex insertRegex(R"(([A-Z]+[0-9]+) insert (.+))");
@@ -21,6 +23,16 @@ static const std::regex rangeRegex(R"(^[A-Z]+[0-9]+:[A-Z]+[0-9]+$)");
 
 Event EventParser::parse(const std::string& input) {
     std::smatch match;
+
+    // open table
+    if (std::regex_match(input, match, openTableRegex)) {
+        return OpenTableEvent{ std::string(match[2]), std::string(match[1]) };
+    }
+
+    // new table
+    if (std::regex_match(input, match, newTableRegex)) {
+        return NewTableEvent{ std::string(match[1]) };
+    }
 
     // delete
     if (std::regex_match(input, match, deleteRegex)) {

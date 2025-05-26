@@ -4,6 +4,15 @@
 
 // - Event Types
 
+struct OpenTableEvent {
+    std::string configFileName;
+    std::string tableName;
+};
+
+struct NewTableEvent {
+    std::string configFileName;
+};
+
 struct InsertEvent {
     CellAddress target;
     LiteralValue value;
@@ -27,6 +36,8 @@ struct FormulaEvent {
 // - Event
 
 using Event = std::variant<
+    OpenTableEvent,
+    NewTableEvent,
     InsertEvent,
     DeleteEvent,
     ReferenceEvent,

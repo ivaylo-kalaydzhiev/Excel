@@ -97,16 +97,13 @@ void handleStartupCommand(const std::string& input, TableConfiguration& config, 
 
             config = loadConfiguration(openEvent.configFileName);
             tableModel = loadTable(openEvent.tableName);
-
             std::cout << "Successfully loaded table '" << openEvent.tableName << "' with configuration '" << openEvent.configFileName << "'\n\n";
-
         }
         else if (std::holds_alternative<NewTableEvent>(event)) {
             const auto& newEvent = std::get<NewTableEvent>(event);
 
             config = loadConfiguration(newEvent.configFileName);
             tableModel = TableModel();
-
             std::cout << "Successfully created new table with configuration '" << newEvent.configFileName << "'\n\n";
         }
         else {
