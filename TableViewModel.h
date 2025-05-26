@@ -13,6 +13,7 @@ public:
     void handle(const Event& event);
 
     const TableConfiguration& getConfiguration() const;
+    const TableModel& getTableModel() const;
     const DisplayableTableModel& getDisplayableTableModel() const;
 
 private:

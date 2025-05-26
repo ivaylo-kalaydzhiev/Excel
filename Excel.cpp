@@ -57,7 +57,7 @@ TableModel loadTable(const std::string& tableFileName) {
     }
 }
 
-void runEventLoop(TableViewModel& viewModel, TableView& view, EventParser& eventParser) {
+void runEventLoop(TableViewModel& viewModel, TableView& view, EventParser& eventParser, std::string& tableFileName) {
     std::cout << "Starting interactive mode. Type 'exit' to quit.\n\n";
 
     view.redraw();
@@ -68,8 +68,12 @@ void runEventLoop(TableViewModel& viewModel, TableView& view, EventParser& event
             if (input.empty()) continue;
 
             if (input == "exit") {
+                if (tableFileName.empty()) {
+                    tableFileName = promptForInput("Enter a filename to save your table: ");
+                }
+                TableParser::save(viewModel.getTableModel(), tableFileName);
+                std::cout << "Table saved to '" << tableFileName << "'.\n";
                 std::cout << "Goodbye!\n";
-                //TableParser::save(viewModel.getTable(), "table.txt");
                 break;
             }
 
@@ -85,7 +89,7 @@ void runEventLoop(TableViewModel& viewModel, TableView& view, EventParser& event
     }
 }
 
-void handleStartupCommand(const std::string& input, TableConfiguration& config, TableModel& tableModel) {
+void handleStartupCommand(const std::string& input, TableConfiguration& config, TableModel& tableModel, std::string& tableFileName) {
     EventParser parser;
     try {
         Event event = parser.parse(input);
@@ -95,6 +99,7 @@ void handleStartupCommand(const std::string& input, TableConfiguration& config, 
 
             config = loadConfiguration(openEvent.configFileName);
             tableModel = loadTable(openEvent.tableName);
+            tableFileName = openEvent.tableName;
             std::cout << "Successfully loaded table '" << openEvent.tableName << "' with configuration '" << openEvent.configFileName << "'\n\n";
         }
         else if (std::holds_alternative<NewTableEvent>(event)) {
@@ -102,6 +107,7 @@ void handleStartupCommand(const std::string& input, TableConfiguration& config, 
 
             config = loadConfiguration(newEvent.configFileName);
             tableModel = TableModel();
+            tableFileName = "";
             std::cout << "Successfully created new table with configuration '" << newEvent.configFileName << "'\n\n";
         }
         else {
@@ -120,14 +126,16 @@ int main() {
         printWelcomeMessage(); 
         std::string startupInput = promptForInput("Enter startup command (open/new): ");
 
+        std::string tableFileName;
+
         TableConfiguration config;
         TableModel tableModel;
-        handleStartupCommand(startupInput, config, tableModel);
+        handleStartupCommand(startupInput, config, tableModel, tableFileName);
 
         TableViewModel viewModel(config, tableModel);
         TableView view(viewModel);
         EventParser eventParser;
-        runEventLoop(viewModel, view, eventParser);
+        runEventLoop(viewModel, view, eventParser, tableFileName);
 
     }
     catch (const std::exception& e) {

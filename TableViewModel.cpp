@@ -29,6 +29,10 @@ const TableConfiguration& TableViewModel::getConfiguration() const {
     return configuration;
 }
 
+const TableModel& TableViewModel::getTableModel() const {
+    return tableModel;
+}
+
 const DisplayableTableModel& TableViewModel::getDisplayableTableModel() const {
     return displayableTableModel;
 }
