@@ -16,7 +16,7 @@
 
 void printWelcomeMessage() {
     std::cout << "===========================================\n";
-    std::cout << "    Excel-like Console Spreadsheet\n";
+    std::cout << "           Console Spreadsheet\n";
     std::cout << "===========================================\n";
     std::cout << "Commands:\n";
     std::cout << "  {cell} insert {value}      - Insert value into cell\n";

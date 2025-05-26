@@ -10,7 +10,7 @@ static std::string trim(const std::string& s) {
     return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
 }
 
-static const std::regex openTableRegex(R"(open (\w+) (.+))");
+static const std::regex openTableRegex(R"(open (.+) (.+))");
 static const std::regex newTableRegex(R"(new (.+))");
 static const std::regex deleteRegex(R"(([A-Z]+[0-9]+) delete)");
 static const std::regex referenceRegex(R"(([A-Z]+[0-9]+)=([A-Z]+[0-9]+))");
