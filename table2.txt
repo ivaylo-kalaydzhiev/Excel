@@ -1,0 +1,4 @@
+A1=number:1.000000
+A2=number:2.000000
+A3=number:3.000000
+B1=formula:AVERAGE(literal:number:1.000000,literal:number:2.000000,literal:number:3.000000)

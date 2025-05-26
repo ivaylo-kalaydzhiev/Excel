@@ -244,7 +244,7 @@ LiteralValue CellEvaluator::evalAVERAGE(const std::vector<FormulaParam>& args) {
         return LiteralValue{ "#VALUE!" };
     }
 
-    return LiteralValue{ sum };
+    return LiteralValue{ sum / count };
 }
 
 LiteralValue CellEvaluator::evalMIN(const std::vector<FormulaParam>& args) {
