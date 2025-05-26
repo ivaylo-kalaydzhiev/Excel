@@ -407,14 +407,9 @@ LiteralValue CellEvaluator::evalCOUNT(const std::vector<FormulaParam>& args) {
 
     int count = 0;
     for (const auto& lv : values) {
-        // Count non-empty strings, non-NaN numbers, and booleans
+        // Expand range represents non-existant cells as empty strings
         bool isEmptyString = std::holds_alternative<std::string>(lv.value) && std::get<std::string>(lv.value).empty();
-        // getNumericValue returns NaN for non-numeric strings, int is never NaN
-        bool isNumericAndNan = std::holds_alternative<std::string>(lv.value) && std::isnan(getNumericValue(lv));
-
-        if (!isEmptyString && !isNumericAndNan) {
-            count++;
-        }
+        if (!isEmptyString) count++;
     }
     return LiteralValue{ static_cast<double>(count) };
 }
