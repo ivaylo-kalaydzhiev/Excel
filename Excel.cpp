@@ -46,18 +46,16 @@ TableConfiguration loadConfiguration(const std::string& configFileName) {
     }
 }
 
-//TableModel loadTable(const std::string& tableFileName) {
-//    try {
-//        TableParser parser;
-//        return parser.parse(tableFileName);
-//    }
-//    catch (const std::exception& e) {
-//        // If file doesn't exist or can't be loaded, return empty table
-//        std::cout << "Note: Could not load table from '" << tableFileName
-//            << "'. Starting with empty table. (" << e.what() << ")\n";
-//        return TableModel();
-//    }
-//}
+TableModel loadTable(const std::string& tableFileName) {
+    try {
+        TableParser parser;
+        return parser.load(tableFileName);
+    }
+    catch (const std::exception& e) {
+        std::cout << "Note: Could not load table from '" << tableFileName << "'. Starting with empty table. (" << e.what() << ")\n";
+        return TableModel();
+    }
+}
 
 void runEventLoop(TableViewModel& viewModel, TableView& view, EventParser& eventParser) {
     std::cout << "Starting interactive mode. Type 'exit' to quit.\n\n";
@@ -71,7 +69,7 @@ void runEventLoop(TableViewModel& viewModel, TableView& view, EventParser& event
 
             if (input == "exit") {
                 std::cout << "Goodbye!\n";
-                // viewModel.save();
+                //TableParser::save(viewModel.getTable(), "table.txt");
                 break;
             }
 

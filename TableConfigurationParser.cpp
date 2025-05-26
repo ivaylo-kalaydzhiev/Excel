@@ -1,4 +1,4 @@
-#include "ConfigurationParser.h"
+#include "TableConfigurationParser.h"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
