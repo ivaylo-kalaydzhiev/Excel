@@ -17,6 +17,7 @@ static const std::regex referenceRegex(R"(([A-Z]+[0-9]+)=([A-Z]+[0-9]+))");
 static const std::regex insertRegex(R"(([A-Z]+[0-9]+) insert (.+))");
 static const std::regex formulaRegex(R"(([A-Z]+[0-9]+)=(\w+)\((.*)\))");
 static const std::regex numberRegex(R"(^-?\d+(\.\d+)?$)");
+static const std::regex textRegex(R"("[a-zA-Z0-9]+")");
 static const std::regex addressRegex(R"(^[A-Z]+[0-9]+$)");
 static const std::regex rangeRegex(R"(^[A-Z]+[0-9]+:[A-Z]+[0-9]+$)");
 
@@ -58,8 +59,11 @@ Event EventParser::parse(const std::string& input) {
         else if (std::regex_match(raw, numberRegex)) {
             literal.value = std::stod(raw);
         }
+        else if (std::regex_match(raw, textRegex)) {
+            literal.value = raw.substr(1, raw.length() - 2);
+        }
         else {
-            literal.value = raw;
+            literal.value = "#VALUE!";
         }
 
         return InsertEvent{ CellAddress::fromString(match[1]), literal };
