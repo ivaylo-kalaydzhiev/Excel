@@ -25,33 +25,19 @@ std::string getStringValue(const LiteralValue& lv) {
     }
 }
 
-// Rethink
-// Helper to extract a double from LiteralValue, returns NaN if not numeric
 double getNumericValue(const LiteralValue& lv) {
-    return std::visit([](auto&& arg) -> double {
-        using T = std::decay_t<decltype(arg)>;
-        if constexpr (std::is_same_v<T, int>) {
-            return static_cast<double>(arg);
-        }
-        else if constexpr (std::is_same_v<T, bool>) {
-            return static_cast<double>(arg); // true=1.0, false=0.0
-        }
-        else if constexpr (std::is_same_v<T, std::string>) {
-            // Attempt to convert string to double
-            try {
-                size_t pos;
-                double val = std::stod(arg, &pos);
-                if (pos == arg.length()) { // Entire string converted
-                    return val;
-                }
-            }
-            catch (...) {
-                // Conversion failed or partial conversion
-            }
-            return std::numeric_limits<double>::quiet_NaN(); // Not a number
-        }
-        return std::numeric_limits<double>::quiet_NaN(); // Fallback for unexpected types
-        }, lv.value);
+    if (auto val = std::get_if<bool>(&lv.value)) {
+        return (*val) ? 1.0 : 0.0;
+    }
+    else if (auto val = std::get_if<double>(&lv.value)) {
+        return *val;
+    }
+    else if (auto val = std::get_if<std::string>(&lv.value)) {
+        return std::numeric_limits<double>::quiet_NaN();
+    }
+
+    // Should not reach here
+    return std::numeric_limits<double>::quiet_NaN();
 }
 
 // - Public evaluation interface
@@ -62,13 +48,13 @@ std::string CellEvaluator::evaluate(const CellValue& cellValue) {
         return getStringValue(result);
     }
     catch (const std::runtime_error& e) {
-        return e.what(); // Return error message
+        return e.what();
     }
     catch (const std::invalid_argument& e) {
-        return e.what(); // Return error message
+        return e.what();
     }
     catch (...) {
-        return "#ERROR!"; // Generic error
+        return "#ERROR!";
     }
 }
 
@@ -93,7 +79,9 @@ LiteralValue CellEvaluator::resolve(const CellValue& value) {
         const FormulaValue& formula = std::get<FormulaValue>(value.value);
         return evaluateFormula(formula);
     }
-    return LiteralValue{ "#VALUE!" }; // Unknown CellValue type
+
+    // Should never come here
+    return LiteralValue{ "#VALUE!" };
 }
 
 // - Formula Evaluation Helpers
@@ -149,27 +137,24 @@ bool CellEvaluator::containsErrorLiteral(const std::vector<LiteralValue>& values
 std::vector<LiteralValue> CellEvaluator::flattenArgs(const std::vector<FormulaParam>& args) {
     std::vector<LiteralValue> flattened;
     for (const auto& param : args) {
-        std::visit([&](auto&& arg) {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, LiteralValue>) {
-                flattened.push_back(arg);
+        if (auto val = std::get_if<LiteralValue>(&param)) {
+            flattened.push_back(*val);
+        }
+        else if (auto val = std::get_if<CellAddress>(&param)) {
+            const CellValue* cellValue = model.getCellValue(*val);
+            if (cellValue) {
+                flattened.push_back(resolve(*cellValue));
             }
-            else if constexpr (std::is_same_v<T, CellAddress>) {
-                const CellValue* cellValue = model.getCellValue(arg);
-                if (cellValue) {
-                    flattened.push_back(resolve(*cellValue));
-                }
-                else {
-                    // Per requirements, empty cell evaluates to 0 for numeric context, or empty string for others
-                    // For now, push empty string, numeric functions will convert to NaN or 0 as needed
-                    flattened.push_back(LiteralValue{ "" });
-                }
+            else {
+                // Per requirements, empty cell evaluates to 0 for numeric context, or empty string for others
+                // For now, push empty string, numeric functions will convert to NaN or 0 as needed
+                flattened.push_back(LiteralValue{ "" });
             }
-            else if constexpr (std::is_same_v<T, AddressRange>) {
-                std::vector<LiteralValue> rangeValues = expandRange(arg);
-                flattened.insert(flattened.end(), rangeValues.begin(), rangeValues.end());
-            }
-            }, param);
+        }
+        else if (auto val = std::get_if<AddressRange>(&param)) {
+            std::vector<LiteralValue> rangeValues = expandRange(*val);
+            flattened.insert(flattened.end(), rangeValues.begin(), rangeValues.end());
+        }
     }
     return flattened;
 }
@@ -213,7 +198,7 @@ LiteralValue CellEvaluator::evalSUM(const std::vector<FormulaParam>& args) {
     if (containsErrorLiteral(values)) {
         return LiteralValue{ "#VALUE!" };
     }
-    if (values.empty()) { // Must have at least 1 parameter
+    if (values.empty()) {
         return LiteralValue{ "#VALUE!" };
     }
 
@@ -228,10 +213,10 @@ LiteralValue CellEvaluator::evalSUM(const std::vector<FormulaParam>& args) {
         }
     }
 
-    if (!hasNumeric) { // If no numeric cells found
+    if (!hasNumeric) {
         return LiteralValue{ "#VALUE!" };
     }
-    return LiteralValue{ static_cast<double>(sum) }; // Convert to int if whole number
+    return LiteralValue{ sum };
 }
 
 LiteralValue CellEvaluator::evalAVERAGE(const std::vector<FormulaParam>& args) {
@@ -239,7 +224,7 @@ LiteralValue CellEvaluator::evalAVERAGE(const std::vector<FormulaParam>& args) {
     if (containsErrorLiteral(values)) {
         return LiteralValue{ "#VALUE!" };
     }
-    if (values.empty()) { // Must have at least 1 parameter
+    if (values.empty()) {
         return LiteralValue{ "#VALUE!" };
     }
 
@@ -254,11 +239,12 @@ LiteralValue CellEvaluator::evalAVERAGE(const std::vector<FormulaParam>& args) {
         }
     }
 
-    if (count == 0) { // If no numeric values found
+    // So there were no numerical values
+    if (count == 0) {
         return LiteralValue{ "#VALUE!" };
     }
-    // Return as string to preserve precision for double
-    return LiteralValue{ std::to_string(sum / count) };
+
+    return LiteralValue{ sum };
 }
 
 LiteralValue CellEvaluator::evalMIN(const std::vector<FormulaParam>& args) {
@@ -283,10 +269,10 @@ LiteralValue CellEvaluator::evalMIN(const std::vector<FormulaParam>& args) {
         }
     }
 
-    if (!foundNumeric) { // No numeric values found
+    if (!foundNumeric) {
         return LiteralValue{ "#VALUE!" };
     }
-    return LiteralValue{ static_cast<double>(minVal) }; // Convert to int if whole number
+    return LiteralValue{ minVal };
 }
 
 LiteralValue CellEvaluator::evalMAX(const std::vector<FormulaParam>& args) {
@@ -311,10 +297,10 @@ LiteralValue CellEvaluator::evalMAX(const std::vector<FormulaParam>& args) {
         }
     }
 
-    if (!foundNumeric) { // No numeric values found
+    if (!foundNumeric) {
         return LiteralValue{ "#VALUE!" };
     }
-    return LiteralValue{ static_cast<double>(maxVal) }; // Convert to int if whole number
+    return LiteralValue{ maxVal };
 }
 
 LiteralValue CellEvaluator::evalCONCAT(const std::vector<FormulaParam>& args) {
@@ -334,7 +320,7 @@ LiteralValue CellEvaluator::evalCONCAT(const std::vector<FormulaParam>& args) {
 
     for (const auto& lv : rangeValues) {
         std::string currentString = getStringValue(lv);
-        if (!currentString.empty()) { // Skip empty cells
+        if (!currentString.empty()) {
             if (!firstValue) {
                 result += delimiter;
             }
@@ -343,7 +329,7 @@ LiteralValue CellEvaluator::evalCONCAT(const std::vector<FormulaParam>& args) {
         }
     }
 
-    if (result.empty() && !rangeValues.empty()) { // If all cells in range were empty
+    if (result.empty() && !rangeValues.empty()) {
         return LiteralValue{ "#VALUE!" };
     }
     return LiteralValue{ result };
@@ -355,7 +341,7 @@ LiteralValue CellEvaluator::evalSUBSTR(const std::vector<FormulaParam>& args) {
         return LiteralValue{ "#VALUE!" };
     }
 
-    std::vector<LiteralValue> values = flattenArgs(args); // Flatten to resolve references
+    std::vector<LiteralValue> values = flattenArgs(args);
     if (containsErrorLiteral(values)) {
         return LiteralValue{ "#VALUE!" };
     }
@@ -380,10 +366,13 @@ LiteralValue CellEvaluator::evalSUBSTR(const std::vector<FormulaParam>& args) {
     // Adjust for 0-based indexing for std::string::substr
     start--;
 
-    if (start >= text.length()) { // Start index too large
+    // Start index too large
+    if (start >= text.length()) {
         return LiteralValue{ "#VALUE!" };
     }
-    if (start + length > text.length()) { // Length extends beyond string
+
+    // Length extends beyond string
+    if (start + length > text.length()) {
         return LiteralValue{ "#VALUE!" };
     }
 
@@ -396,7 +385,7 @@ LiteralValue CellEvaluator::evalLEN(const std::vector<FormulaParam>& args) {
         return LiteralValue{ "#VALUE!" };
     }
 
-    std::vector<LiteralValue> values = flattenArgs(args); // Flatten to resolve references
+    std::vector<LiteralValue> values = flattenArgs(args);
     if (containsErrorLiteral(values)) {
         return LiteralValue{ "#VALUE!" };
     }
@@ -419,11 +408,11 @@ LiteralValue CellEvaluator::evalCOUNT(const std::vector<FormulaParam>& args) {
     int count = 0;
     for (const auto& lv : values) {
         // Count non-empty strings, non-NaN numbers, and booleans
-        bool is_empty_string = std::holds_alternative<std::string>(lv.value) && std::get<std::string>(lv.value).empty();
+        bool isEmptyString = std::holds_alternative<std::string>(lv.value) && std::get<std::string>(lv.value).empty();
         // getNumericValue returns NaN for non-numeric strings, int is never NaN
-        bool is_numeric_and_nan = std::holds_alternative<std::string>(lv.value) && std::isnan(getNumericValue(lv));
+        bool isNumericAndNan = std::holds_alternative<std::string>(lv.value) && std::isnan(getNumericValue(lv));
 
-        if (!is_empty_string && !is_numeric_and_nan) {
+        if (!isEmptyString && !isNumericAndNan) {
             count++;
         }
     }
