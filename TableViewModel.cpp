@@ -5,23 +5,24 @@ TableViewModel::TableViewModel(TableConfiguration config, TableModel tableModel)
     updateAllDisplayableCells();
 }
 
-// We need to make sure we update both the TableModel and the DisplayableTableModel on each event handled
+// We need to make sure we update both the TableModel and all of the DisplayableTableModel on each event handled
 void TableViewModel::handle(const Event& event) {
     if (auto e = std::get_if<InsertEvent>(&event)) {
         tableModel.setCellValue(e->target, CellValue{ e->value } );
-        updateDisplayableCell(e->target);
+        updateAllDisplayableCells();
     }
     else if (auto e = std::get_if<DeleteEvent>(&event)) {
         tableModel.removeCellValue(e->target);
         displayableTableModel.removeDisplayValue(e->target);
+        updateAllDisplayableCells();
     }
     else if (auto e = std::get_if<ReferenceEvent>(&event)) {
         tableModel.setCellValue(e->target, CellValue{ e->source });
-        updateDisplayableCell(e->target);
+        updateAllDisplayableCells();
     }
     else if (auto e = std::get_if<FormulaEvent>(&event)) {
         tableModel.setCellValue(e->target, CellValue{ FormulaValue{e->formula, e->params} });
-        updateDisplayableCell(e->target);
+        updateAllDisplayableCells();
     }
 }
 
