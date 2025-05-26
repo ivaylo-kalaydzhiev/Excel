@@ -8,3 +8,7 @@ D1=formula:SUM(range:A1-B3)
 A4=number:23.000000
 J1=formula:SUM(cell:A1,range:C1-D1)
 C5=string:a
+A11=number:12.000000
+L1=number:1.000000
+A12=string:true
+AB3=string:thing

@@ -26,7 +26,7 @@ private:
     // Utility methods
     std::vector<int> calculateColumnWidths() const;
     std::string formatCellContent(const std::string& content, int width, Alignment alignment) const;
-    std::string getColumnLabel(int colIndex) const;
+    std::string getRowLabel(int colIndex) const;
     std::string getCellDisplayValue(int row, int col) const;
     int getVisibleRows() const;
     int getVisibleCols() const;

@@ -16,3 +16,19 @@ const std::string* DisplayableTableModel::getDisplayValue(const CellAddress& add
 const DisplayableTableModel::DisplayMap& DisplayableTableModel::getAllDisplayValues() const {
     return displayValues;
 }
+
+size_t DisplayableTableModel::getRowCount() const {
+    size_t rowMax = 0;
+    for (const auto& val : displayValues) {
+        rowMax = std::max(rowMax, val.first.row);
+    }
+    return rowMax + 1;
+}
+
+size_t DisplayableTableModel::getColumnCount() const {
+    size_t colMax = 0;
+    for (const auto& val : displayValues) {
+        colMax = std::max(colMax, val.first.column);
+    }
+    return colMax + 1;
+}

@@ -12,6 +12,9 @@ public:
     void removeDisplayValue(const CellAddress& address);
     const std::string* getDisplayValue(const CellAddress& address) const;
     const DisplayMap& getAllDisplayValues() const;
+    
+    size_t getRowCount() const;
+    size_t getColumnCount() const;
 
 private:
     DisplayMap displayValues;

@@ -101,7 +101,7 @@ void TableView::drawRow(int rowIndex, const std::vector<int>& columnWidths) cons
     const auto& config = viewModel.getConfiguration();
 
     // Draw row label (A, B, C, etc.)
-    std::string rowLabel = getColumnLabel(rowIndex);
+    std::string rowLabel = getRowLabel(rowIndex);
     std::cout << "| " << std::setw(2) << std::left << rowLabel << " |";
 
     // Draw cells in the row
@@ -121,7 +121,8 @@ std::vector<int> TableView::calculateColumnWidths() const {
     if (config.autoFit) {
         // Calculate width based on content
         for (int col = 0; col < visibleCols; ++col) {
-            int maxWidth = 3; // Minimum width for column number
+            // Minimum width for column number
+            int maxWidth = 3;
 
             int visibleRows = getVisibleRows();
             for (int row = 0; row < visibleRows; ++row) {
@@ -134,8 +135,8 @@ std::vector<int> TableView::calculateColumnWidths() const {
         }
     }
     else {
-        // Use fixed width based on visibleCellSymbols
-        int fixedWidth = config.visibleCellSymbols + 2; // Add padding
+        // Use fixed width based on visibleCellSymbols + padding
+        int fixedWidth = config.visibleCellSymbols + 2;
         for (int col = 0; col < visibleCols; ++col) {
             widths[col] = fixedWidth;
         }
@@ -146,14 +147,16 @@ std::vector<int> TableView::calculateColumnWidths() const {
 
 std::string TableView::formatCellContent(const std::string& content, int width, Alignment alignment) const {
     std::string truncated = content;
-    int availableWidth = width - 2; // Account for padding
+    // Account for padding
+    int availableWidth = width - 2;
 
     if (static_cast<int>(truncated.length()) > availableWidth) {
         truncated = truncated.substr(0, availableWidth);
     }
 
     std::ostringstream oss;
-    oss << " "; // Left padding
+    // Left padding
+    oss << " ";
 
     switch (alignment) {
     case Alignment::Left:
@@ -175,14 +178,15 @@ std::string TableView::formatCellContent(const std::string& content, int width, 
         break;
     }
 
-    oss << " "; // Right padding
+    // Right padding
+    oss << " ";
     return oss.str();
 }
 
-std::string TableView::getColumnLabel(int colIndex) const {
+std::string TableView::getRowLabel(int rowIndex) const {
     // Convert 0-based index to Excel-style letters (A, B, C, ..., Z, AA, AB, ...)
     std::string label;
-    int index = colIndex;
+    int index = rowIndex;
 
     do {
         label = char('A' + (index % 26)) + label;
@@ -202,10 +206,32 @@ std::string TableView::getCellDisplayValue(int row, int col) const {
 
 int TableView::getVisibleRows() const {
     const auto& config = viewModel.getConfiguration();
-    return config.initialTableRows;
+    int initialRows = config.initialTableRows;
+    int maxRows = config.maxTableRows;
+    int actualRows = viewModel.getDisplayableTableModel().getRowCount();
+    if (actualRows < initialRows) {
+        return initialRows;
+    }
+    else if (actualRows > maxRows) {
+        return maxRows;
+    }
+    else {
+        return actualRows;
+    }
 }
 
 int TableView::getVisibleCols() const {
     const auto& config = viewModel.getConfiguration();
-    return config.initialTableCols;
+    int initialCols = config.initialTableRows;
+    int maxCols = config.maxTableRows;
+    int actualCols = viewModel.getDisplayableTableModel().getColumnCount();
+    if (actualCols < initialCols) {
+        return initialCols;
+    }
+    else if (actualCols > maxCols) {
+        return maxCols;
+    }
+    else {
+        return actualCols;
+    }
 }

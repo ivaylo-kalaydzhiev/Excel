@@ -1,7 +1,7 @@
 initialTableRows:10
 initialTableCols:10
-maxTableRows:20
-maxTableCols:10
+maxTableRows:100
+maxTableCols:100
 autoFit:true
 visibleCellSymbols:15
 initialAlignment:left
